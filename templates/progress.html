@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Progress - Fitness Guru</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Ubuntu', sans-serif;
+    }
+    .gradient-bg {
+      background: linear-gradient(135deg, #2B1D41 0%, #1C1C3C 100%);
+    }
+    .btn-primary {
+      background-color: #EF476F;
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      background-color: #FF5E7E;
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+
+<body class="bg-[#1C1C3C] text-white min-h-screen flex flex-col">
+  <!-- Header -->
+  <header class="flex items-center justify-between p-6 gradient-bg shadow-lg">
+    <div class="flex items-center space-x-4">
+      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Fitness Guru Logo" class="w-14 h-14">
+      <h1 class="text-3xl font-bold">Fitness Guru</h1>
+    </div>
+    
+    <!-- Auth Status -->
+    <div class="flex items-center space-x-4">
+      <span class="text-gray-300">Hello, {{ user_id }}</span>
+      <a href="/logout" class="px-4 py-2 rounded-full bg-[#2F2F4F] hover:bg-[#3F3F5F] text-sm font-medium">Logout</a>
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="flex justify-around bg-[#2F2F4F] text-md text-gray-300 py-4 border-t border-b border-[#444]">
+    <a href="/" class="hover:text-white font-medium transition-colors">Home</a>
+    <a href="/workout" class="hover:text-white font-medium transition-colors">Log Workout</a>
+    <a href="/progress" class="hover:text-white font-medium transition-colors">Progress</a>
+    <a href="/profile" class="hover:text-white font-medium transition-colors">Profile</a>
+    <a href="/about" class="hover:text-white font-medium transition-colors">About</a>
+  </nav>
+  
+  <!-- Main Content -->
+  <main class="flex-grow flex flex-col items-center justify-center p-6">
+    <div class="bg-[#31234B] p-8 rounded-3xl shadow-xl w-full max-w-4xl">
+      <h1 class="text-3xl font-bold mb-6 text-center">Your BMI Progress</h1>
+      
+      {% if has_data %}
+        <div class="mb-6 flex justify-center">
+          <img src="{{ chart_path }}" alt="BMI Progress Chart" class="rounded-xl shadow-lg">
+        </div>
+        
+        <div class="bg-[#2B1D41] p-4 rounded-lg mb-6">
+          <h2 class="text-xl font-medium mb-2">What is BMI?</h2>
+          <p class="text-gray-300">Body Mass Index (BMI) is a value derived from a person's weight and height. It is a useful indicator of whether you're at a healthy weight or not.</p>
+        </div>
+        
+        <div class="bg-[#2B1D41] p-4 rounded-lg">
+          <h2 class="text-xl font-medium mb-2">BMI Categories</h2>
+          <ul class="list-disc list-inside text-gray-300 space-y-1">
+            <li>Under 18.5: Underweight</li>
+            <li>18.5 - 24.9: Normal weight</li>
+            <li>25 - 29.9: Overweight</li>
+            <li>30 and above: Obesity</li>
+          </ul>
+        </div>
+      {% else %}
+        <div class="bg-[#2B1D41] p-8 rounded-lg text-center mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          </svg>
+          <h2 class="text-xl font-medium mb-2">No Data Available</h2>
+          <p class="text-gray-300 mb-6">You haven't logged any workouts yet. Start logging your workouts to track your BMI progress!</p>
+          <a href="/workout" class="inline-block py-2 px-6 rounded-full btn-primary font-semibold text-white">Log Your First Workout</a>
+        </div>
+      {% endif %}
+      
+      <div class="mt-8 text-center">
+        <a href="/" class="inline-block py-2 px-6 rounded-full bg-[#2F2F4F] hover:bg-[#3F3F5F] transition duration-200 font-medium">Back to Dashboard</a>
+      </div>
+    </div>
+  </main>
+  
+  <!-- Footer -->
+  <footer class="mt-8 p-6 text-center text-gray-400 text-sm bg-[#2B1D41] border-t border-[#444]">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex flex-col md:flex-row justify-between items-center mb-4">
+        <div class="flex items-center space-x-2 mb-4 md:mb-0">
+          <span class="font-bold text-white">Fitness Guru</span>
+        </div>
+        <div class="flex space-x-6">
+          <a href="/about" class="hover:text-white transition-colors">About</a>
+          <a href="/contact" class="hover:text-white transition-colors">Contact</a>
+        </div>
+      </div>
+      <div class="pt-4 border-t border-[#444]">
+        &copy; 2025 Fitness Guru. All rights reserved.
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

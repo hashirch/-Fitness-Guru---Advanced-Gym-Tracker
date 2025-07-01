@@ -1,0 +1,1 @@
+mongodb+srv://Shaka:Shakex%40fast@gymtracker.t9nhpel.mongodb.net/?retryWrites=true&w=majority&appName=GymTracker

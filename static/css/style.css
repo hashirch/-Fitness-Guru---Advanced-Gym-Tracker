@@ -1,0 +1,130 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+header {
+    background: #007bff; 
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    font-size: 2.5em;
+    font-weight: bold;
+}
+
+header h1 {
+    margin: 0;
+}
+
+nav {
+    background-color: #343a40; 
+    padding: 10px;
+    text-align: center;
+}
+
+nav a {
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-size: 1.1em;
+    margin: 0 10px;
+}
+
+nav a:hover {
+    background-color: #007bff;
+    border-radius: 5px;
+}
+
+.hero {
+    text-align: center;
+    padding: 40px 0;
+    background: linear-gradient(90deg, rgba(0,123,255,1) 0%, rgba(0,255,128,1) 100%);
+    color: white;
+    font-size: 3em;
+    font-weight: bold;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1.1em;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+form {
+    margin: 20px auto;
+    max-width: 600px;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+form input, form select, form button {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+form input:focus, form select:focus {
+    border-color: #007bff;
+}
+
+footer {
+    background-color: #343a40;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+    font-size: 1em;
+}
+
+footer a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+.chart-container {
+    margin: 40px auto;
+    max-width: 800px;
+    text-align: center;
+}
+
+.chart-container canvas {
+    max-width: 100%;
+}
+
+@media (max-width: 768px) {
+    .hero {
+        font-size: 2.5em;
+    }
+
+    header {
+        font-size: 2em;
+    }
+
+    nav a {
+        font-size: 1em;
+    }
+}

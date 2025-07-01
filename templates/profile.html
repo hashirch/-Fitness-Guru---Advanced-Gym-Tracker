@@ -1,0 +1,282 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - Fitness Guru{% endblock %}
+
+{% block content %}
+<div class="min-h-screen py-8 px-4">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold mb-2">Your Profile</h1>
+      <p class="text-gray-300">Manage your fitness information and goals</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Profile Form -->
+      <div class="bg-[#31234B] p-8 rounded-3xl shadow-xl">
+        <h2 class="text-2xl font-bold mb-6 flex items-center">
+          <i class="fas fa-user-edit mr-3"></i>Personal Information
+        </h2>
+        
+        <form method="POST" class="space-y-6">
+          <!-- Basic Info -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="age" class="block text-sm font-medium mb-2">
+                <i class="fas fa-birthday-cake mr-2"></i>Age
+              </label>
+              <input 
+                id="age" 
+                name="age" 
+                type="number" 
+                required
+                min="13"
+                max="120"
+                class="w-full px-4 py-3 rounded-lg bg-[#2B1D41] border border-[#444] focus:outline-none focus:ring-2 focus:ring-[#06D6A0] text-white"
+                value="{{ user_data.get('age', '') }}"
+              >
+            </div>
+            
+            <div>
+              <label for="gender" class="block text-sm font-medium mb-2">
+                <i class="fas fa-venus-mars mr-2"></i>Gender
+              </label>
+              <select 
+                id="gender" 
+                name="gender"
+                required
+                class="w-full px-4 py-3 rounded-lg bg-[#2B1D41] border border-[#444] focus:outline-none focus:ring-2 focus:ring-[#06D6A0] text-white"
+              >
+                <option value="">Select gender</option>
+                <option value="male" {% if user_data.get('gender') == 'male' %}selected{% endif %}>Male</option>
+                <option value="female" {% if user_data.get('gender') == 'female' %}selected{% endif %}>Female</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Physical Measurements -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="weight" class="block text-sm font-medium mb-2">
+                <i class="fas fa-weight mr-2"></i>Weight (kg)
+              </label>
+              <input 
+                id="weight" 
+                name="weight" 
+                type="number" 
+                required
+                step="0.1"
+                min="30"
+                max="300"
+                class="w-full px-4 py-3 rounded-lg bg-[#2B1D41] border border-[#444] focus:outline-none focus:ring-2 focus:ring-[#06D6A0] text-white"
+                value="{{ user_data.get('weight', '') }}"
+              >
+            </div>
+            
+            <div>
+              <label for="height" class="block text-sm font-medium mb-2">
+                <i class="fas fa-ruler-vertical mr-2"></i>Height (cm)
+              </label>
+              <input 
+                id="height" 
+                name="height" 
+                type="number" 
+                required
+                min="100"
+                max="250"
+                class="w-full px-4 py-3 rounded-lg bg-[#2B1D41] border border-[#444] focus:outline-none focus:ring-2 focus:ring-[#06D6A0] text-white"
+                value="{{ user_data.get('height', '') }}"
+              >
+            </div>
+          </div>
+
+          <!-- Fitness Goals -->
+          <div>
+            <label for="goal" class="block text-sm font-medium mb-2">
+              <i class="fas fa-bullseye mr-2"></i>Fitness Goal
+            </label>
+            <select 
+              id="goal" 
+              name="goal"
+              required
+              class="w-full px-4 py-3 rounded-lg bg-[#2B1D41] border border-[#444] focus:outline-none focus:ring-2 focus:ring-[#06D6A0] text-white"
+            >
+              <option value="">Select your goal</option>
+              <option value="fat loss" {% if user_data.get('goal') == 'fat loss' %}selected{% endif %}>Fat Loss</option>
+              <option value="muscle gain" {% if user_data.get('goal') == 'muscle gain' %}selected{% endif %}>Muscle Gain</option>
+              <option value="maintenance" {% if user_data.get('goal') == 'maintenance' %}selected{% endif %}>Maintenance</option>
+              <option value="strength" {% if user_data.get('goal') == 'strength' %}selected{% endif %}>Strength Training</option>
+              <option value="endurance" {% if user_data.get('goal') == 'endurance' %}selected{% endif %}>Endurance</option>
+            </select>
+          </div>
+
+          <!-- Activity Level -->
+          <div>
+            <label for="activity_level" class="block text-sm font-medium mb-2">
+              <i class="fas fa-running mr-2"></i>Activity Level
+            </label>
+            <select 
+              id="activity_level" 
+              name="activity_level"
+              required
+              class="w-full px-4 py-3 rounded-lg bg-[#2B1D41] border border-[#444] focus:outline-none focus:ring-2 focus:ring-[#06D6A0] text-white"
+            >
+              <option value="">Select activity level</option>
+              <option value="sedentary" {% if user_data.get('activity_level') == 'sedentary' %}selected{% endif %}>Sedentary (Little or no exercise)</option>
+              <option value="light" {% if user_data.get('activity_level') == 'light' %}selected{% endif %}>Light (Exercise 1-3 days/week)</option>
+              <option value="moderate" {% if user_data.get('activity_level') == 'moderate' %}selected{% endif %}>Moderate (Exercise 3-5 days/week)</option>
+              <option value="active" {% if user_data.get('activity_level') == 'active' %}selected{% endif %}>Active (Exercise 6-7 days/week)</option>
+              <option value="very_active" {% if user_data.get('activity_level') == 'very_active' %}selected{% endif %}>Very Active (Hard exercise, physical job)</option>
+            </select>
+          </div>
+
+          <!-- Submit Button -->
+          <button 
+            type="submit" 
+            class="w-full py-3 rounded-full btn-primary font-semibold text-white text-lg transition duration-200"
+          >
+            <i class="fas fa-save mr-2"></i>Update Profile
+          </button>
+        </form>
+      </div>
+
+      <!-- Profile Stats -->
+      <div class="space-y-6">
+        <!-- Current Stats -->
+        {% if user_data and user_data.get('bmi') %}
+        <div class="bg-[#31234B] p-6 rounded-3xl shadow-xl">
+          <h3 class="text-xl font-bold mb-4 flex items-center">
+            <i class="fas fa-chart-bar mr-3"></i>Your Stats
+          </h3>
+          
+          <div class="grid grid-cols-2 gap-4">
+            <div class="bg-[#2B1D41] p-4 rounded-lg text-center">
+              <div class="text-2xl font-bold text-[#06D6A0]">{{ user_data.get('bmi', 'N/A') }}</div>
+              <div class="text-sm text-gray-300">BMI</div>
+              <div class="text-xs text-gray-400 mt-1">{{ user_data.get('bmi_category', 'N/A') }}</div>
+            </div>
+            
+            <div class="bg-[#2B1D41] p-4 rounded-lg text-center">
+              <div class="text-2xl font-bold text-[#EF476F]">{{ user_data.get('bmr', 'N/A') }}</div>
+              <div class="text-sm text-gray-300">BMR (calories/day)</div>
+              <div class="text-xs text-gray-400 mt-1">Basal Metabolic Rate</div>
+            </div>
+            
+            <div class="bg-[#2B1D41] p-4 rounded-lg text-center">
+              <div class="text-2xl font-bold text-[#118AB2]">{{ user_data.get('tdee', 'N/A') }}</div>
+              <div class="text-sm text-gray-300">TDEE (calories/day)</div>
+              <div class="text-xs text-gray-400 mt-1">Total Daily Energy Expenditure</div>
+            </div>
+            
+            <div class="bg-[#2B1D41] p-4 rounded-lg text-center">
+              <div class="text-2xl font-bold text-[#FFD93D]">{{ user_data.get('weight', 'N/A') }} kg</div>
+              <div class="text-sm text-gray-300">Current Weight</div>
+              <div class="text-xs text-gray-400 mt-1">{{ user_data.get('height', 'N/A') }} cm height</div>
+            </div>
+          </div>
+          
+          {% if user_data.get('bmi_advice') %}
+          <div class="mt-4 p-4 bg-[#2B1D41] rounded-lg">
+            <h4 class="font-medium text-[#06D6A0] mb-2">Health Advice</h4>
+            <p class="text-sm text-gray-300">{{ user_data.get('bmi_advice') }}</p>
+          </div>
+          {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- BMI Categories Info -->
+        <div class="bg-[#31234B] p-6 rounded-3xl shadow-xl">
+          <h3 class="text-xl font-bold mb-4 flex items-center">
+            <i class="fas fa-info-circle mr-3"></i>BMI Categories
+          </h3>
+          
+          <div class="space-y-3">
+            <div class="flex justify-between items-center p-3 bg-[#2B1D41] rounded-lg">
+              <span class="text-sm">Underweight</span>
+              <span class="text-xs text-gray-400">&lt; 18.5</span>
+            </div>
+            <div class="flex justify-between items-center p-3 bg-[#2B1D41] rounded-lg">
+              <span class="text-sm">Normal weight</span>
+              <span class="text-xs text-gray-400">18.5 - 24.9</span>
+            </div>
+            <div class="flex justify-between items-center p-3 bg-[#2B1D41] rounded-lg">
+              <span class="text-sm">Overweight</span>
+              <span class="text-xs text-gray-400">25 - 29.9</span>
+            </div>
+            <div class="flex justify-between items-center p-3 bg-[#2B1D41] rounded-lg">
+              <span class="text-sm">Obese</span>
+              <span class="text-xs text-gray-400">≥ 30</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="bg-[#31234B] p-6 rounded-3xl shadow-xl">
+          <h3 class="text-xl font-bold mb-4 flex items-center">
+            <i class="fas fa-bolt mr-3"></i>Quick Actions
+          </h3>
+          
+          <div class="space-y-3">
+            <a href="{{ url_for('log_workout') }}" class="block w-full py-3 px-4 bg-[#2B1D41] hover:bg-[#3F3F5F] rounded-lg transition duration-200 text-center">
+              <i class="fas fa-dumbbell mr-2"></i>Log Workout
+            </a>
+            <a href="{{ url_for('progress') }}" class="block w-full py-3 px-4 bg-[#2B1D41] hover:bg-[#3F3F5F] rounded-lg transition duration-200 text-center">
+              <i class="fas fa-chart-line mr-2"></i>View Progress
+            </a>
+            <a href="{{ url_for('workout_history') }}" class="block w-full py-3 px-4 bg-[#2B1D41] hover:bg-[#3F3F5F] rounded-lg transition duration-200 text-center">
+              <i class="fas fa-history mr-2"></i>Workout History
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Real-time BMI calculation
+  function calculateBMI() {
+    const weight = parseFloat(document.getElementById('weight').value);
+    const height = parseFloat(document.getElementById('height').value);
+    
+    if (weight && height) {
+      const bmi = (weight / Math.pow(height / 100, 2)).toFixed(1);
+      const bmiDisplay = document.getElementById('bmi-display');
+      if (bmiDisplay) {
+        bmiDisplay.textContent = bmi;
+      }
+    }
+  }
+
+  // Add event listeners for real-time calculation
+  document.getElementById('weight').addEventListener('input', calculateBMI);
+  document.getElementById('height').addEventListener('input', calculateBMI);
+
+  // Form validation
+  document.querySelector('form').addEventListener('submit', function(e) {
+    const age = parseInt(document.getElementById('age').value);
+    const weight = parseFloat(document.getElementById('weight').value);
+    const height = parseFloat(document.getElementById('height').value);
+    
+    if (age < 13 || age > 120) {
+      e.preventDefault();
+      alert('Please enter a valid age between 13 and 120.');
+      return;
+    }
+    
+    if (weight < 30 || weight > 300) {
+      e.preventDefault();
+      alert('Please enter a valid weight between 30 and 300 kg.');
+      return;
+    }
+    
+    if (height < 100 || height > 250) {
+      e.preventDefault();
+      alert('Please enter a valid height between 100 and 250 cm.');
+      return;
+    }
+  });
+</script>
+{% endblock %}

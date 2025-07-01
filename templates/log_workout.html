@@ -1,0 +1,353 @@
+{% extends "base.html" %}
+
+{% block title %}Log Workout - Fitness Guru{% endblock %}
+
+{% block content %}
+<div class="min-h-screen py-8 px-4">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold mb-2">Log Your Workout</h1>
+      <p class="text-gray-300">Track your progress and stay motivated</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Workout Form -->
+      <div class="lg:col-span-2">
+        <div class="bg-[#31234B] p-8 rounded-3xl shadow-xl">
+          <h2 class="text-2xl font-bold mb-6 flex items-center">
+            <i class="fas fa-dumbbell mr-3"></i>Workout Details
+          </h2>
+          
+          <form method="POST" class="space-y-6" id="workoutForm">
+            <!-- Workout Name -->
+            <div>
+              <label for="workout" class="block text-sm font-medium mb-2">
+                <i class="fas fa-tag mr-2"></i>Workout Name
+              </label>
+              <input 
+                id="workout" 
+                name="workout" 
+                type="text" 
+                required
+                minlength="2"
+                maxlength="100"
+                class="w-full px-4 py-3 rounded-lg bg-[#2B1D41] border border-[#444] focus:outline-none focus:ring-2 focus:ring-[#06D6A0] text-white placeholder-gray-400"
+                placeholder="e.g., Upper Body, Leg Day, Cardio"
+                value="{{ request.form.get('workout', '') }}"
+              >
+            </div>
+
+            <!-- Duration -->
+            <div>
+              <label for="duration" class="block text-sm font-medium mb-2">
+                <i class="fas fa-clock mr-2"></i>Duration (minutes)
+              </label>
+              <input 
+                id="duration" 
+                name="duration" 
+                type="number" 
+                required
+                min="1"
+                max="480"
+                class="w-full px-4 py-3 rounded-lg bg-[#2B1D41] border border-[#444] focus:outline-none focus:ring-2 focus:ring-[#06D6A0] text-white"
+                placeholder="45"
+                value="{{ request.form.get('duration', '') }}"
+              >
+              <p class="text-xs text-gray-400 mt-1">Enter duration in minutes (1-480)</p>
+            </div>
+
+            <!-- Sets and Reps -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label for="sets" class="block text-sm font-medium mb-2">
+                  <i class="fas fa-layer-group mr-2"></i>Sets
+                </label>
+                <input 
+                  id="sets" 
+                  name="sets" 
+                  type="number" 
+                  required
+                  min="1"
+                  max="50"
+                  class="w-full px-4 py-3 rounded-lg bg-[#2B1D41] border border-[#444] focus:outline-none focus:ring-2 focus:ring-[#06D6A0] text-white"
+                  placeholder="3"
+                  value="{{ request.form.get('sets', '') }}"
+                >
+              </div>
+              
+              <div>
+                <label for="reps" class="block text-sm font-medium mb-2">
+                  <i class="fas fa-redo mr-2"></i>Reps per Set
+                </label>
+                <input 
+                  id="reps" 
+                  name="reps" 
+                  type="number" 
+                  required
+                  min="1"
+                  max="1000"
+                  class="w-full px-4 py-3 rounded-lg bg-[#2B1D41] border border-[#444] focus:outline-none focus:ring-2 focus:ring-[#06D6A0] text-white"
+                  placeholder="12"
+                  value="{{ request.form.get('reps', '') }}"
+                >
+              </div>
+            </div>
+
+            <!-- Weight (Optional) -->
+            <div>
+              <label for="weight" class="block text-sm font-medium mb-2">
+                <i class="fas fa-weight-hanging mr-2"></i>Weight (kg) - Optional
+              </label>
+              <input 
+                id="weight" 
+                name="weight" 
+                type="number" 
+                step="0.5"
+                min="0"
+                max="500"
+                class="w-full px-4 py-3 rounded-lg bg-[#2B1D41] border border-[#444] focus:outline-none focus:ring-2 focus:ring-[#06D6A0] text-white"
+                placeholder="0 (for bodyweight exercises)"
+                value="{{ request.form.get('weight', '') }}"
+              >
+              <p class="text-xs text-gray-400 mt-1">Leave empty for bodyweight exercises</p>
+            </div>
+
+            <!-- Difficulty Rating -->
+            <div>
+              <label for="difficulty" class="block text-sm font-medium mb-2">
+                <i class="fas fa-star mr-2"></i>Difficulty Rating
+              </label>
+              <div class="flex items-center space-x-4">
+                <input 
+                  id="difficulty" 
+                  name="difficulty" 
+                  type="range" 
+                  min="1" 
+                  max="5" 
+                  value="3"
+                  class="flex-1 h-2 bg-[#2B1D41] rounded-lg appearance-none cursor-pointer slider"
+                  oninput="updateDifficultyLabel(this.value)"
+                >
+                <span id="difficultyLabel" class="text-lg font-bold text-[#06D6A0] min-w-[100px]">Moderate</span>
+              </div>
+              <div class="flex justify-between text-xs text-gray-400 mt-1">
+                <span>Very Easy</span>
+                <span>Easy</span>
+                <span>Moderate</span>
+                <span>Hard</span>
+                <span>Very Hard</span>
+              </div>
+            </div>
+
+            <!-- Notes -->
+            <div>
+              <label for="notes" class="block text-sm font-medium mb-2">
+                <i class="fas fa-sticky-note mr-2"></i>Notes (Optional)
+              </label>
+              <textarea 
+                id="notes" 
+                name="notes" 
+                rows="3"
+                maxlength="500"
+                class="w-full px-4 py-3 rounded-lg bg-[#2B1D41] border border-[#444] focus:outline-none focus:ring-2 focus:ring-[#06D6A0] text-white resize-none"
+                placeholder="How did you feel? Any challenges? Future improvements?"
+              >{{ request.form.get('notes', '') }}</textarea>
+              <p class="text-xs text-gray-400 mt-1">Max 500 characters</p>
+            </div>
+
+            <!-- Submit Button -->
+            <button 
+              type="submit" 
+              class="w-full py-3 rounded-full btn-primary font-semibold text-white text-lg transition duration-200"
+            >
+              <i class="fas fa-save mr-2"></i>Log Workout
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="space-y-6">
+        <!-- Quick Stats -->
+        <div class="bg-[#31234B] p-6 rounded-3xl shadow-xl">
+          <h3 class="text-xl font-bold mb-4 flex items-center">
+            <i class="fas fa-calculator mr-3"></i>Calculations
+          </h3>
+          
+          <div class="space-y-4">
+            <div class="bg-[#2B1D41] p-4 rounded-lg">
+              <div class="text-sm text-gray-300 mb-1">Total Volume</div>
+              <div id="totalVolume" class="text-2xl font-bold text-[#06D6A0]">0</div>
+              <div class="text-xs text-gray-400">sets × reps × weight</div>
+            </div>
+            
+            <div class="bg-[#2B1D41] p-4 rounded-lg">
+              <div class="text-sm text-gray-300 mb-1">One Rep Max</div>
+              <div id="oneRepMax" class="text-2xl font-bold text-[#EF476F]">N/A</div>
+              <div class="text-xs text-gray-400">Estimated 1RM</div>
+            </div>
+            
+            <div class="bg-[#2B1D41] p-4 rounded-lg">
+              <div class="text-sm text-gray-300 mb-1">Duration</div>
+              <div id="durationDisplay" class="text-2xl font-bold text-[#118AB2]">0 min</div>
+              <div class="text-xs text-gray-400">Workout length</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Workout Tips -->
+        <div class="bg-[#31234B] p-6 rounded-3xl shadow-xl">
+          <h3 class="text-xl font-bold mb-4 flex items-center">
+            <i class="fas fa-lightbulb mr-3"></i>Tips
+          </h3>
+          
+          <div class="space-y-3 text-sm text-gray-300">
+            <div class="flex items-start space-x-2">
+              <i class="fas fa-check-circle text-[#06D6A0] mt-1"></i>
+              <span>Be consistent with your logging for better progress tracking</span>
+            </div>
+            <div class="flex items-start space-x-2">
+              <i class="fas fa-check-circle text-[#06D6A0] mt-1"></i>
+              <span>Include weight for strength training exercises</span>
+            </div>
+            <div class="flex items-start space-x-2">
+              <i class="fas fa-check-circle text-[#06D6A0] mt-1"></i>
+              <span>Rate difficulty honestly to track your progress</span>
+            </div>
+            <div class="flex items-start space-x-2">
+              <i class="fas fa-check-circle text-[#06D6A0] mt-1"></i>
+              <span>Add notes to remember how you felt during the workout</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Workouts -->
+        <div class="bg-[#31234B] p-6 rounded-3xl shadow-xl">
+          <h3 class="text-xl font-bold mb-4 flex items-center">
+            <i class="fas fa-history mr-3"></i>Recent Workouts
+          </h3>
+          
+          <div class="space-y-3">
+            <a href="{{ url_for('workout_history') }}" class="block w-full py-2 px-4 bg-[#2B1D41] hover:bg-[#3F3F5F] rounded-lg transition duration-200 text-center text-sm">
+              <i class="fas fa-list mr-2"></i>View All Workouts
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Update difficulty label
+  function updateDifficultyLabel(value) {
+    const labels = ['Very Easy', 'Easy', 'Moderate', 'Hard', 'Very Hard'];
+    const colors = ['#10B981', '#34D399', '#06D6A0', '#F59E0B', '#EF476F'];
+    const label = document.getElementById('difficultyLabel');
+    label.textContent = labels[value - 1];
+    label.style.color = colors[value - 1];
+  }
+
+  // Calculate total volume
+  function calculateVolume() {
+    const sets = parseInt(document.getElementById('sets').value) || 0;
+    const reps = parseInt(document.getElementById('reps').value) || 0;
+    const weight = parseFloat(document.getElementById('weight').value) || 0;
+    
+    const volume = sets * reps * (weight || 1);
+    document.getElementById('totalVolume').textContent = volume.toLocaleString();
+    
+    // Calculate one rep max if weight is provided
+    if (weight > 0 && reps > 0) {
+      const oneRM = reps === 1 ? weight : weight * (1 + reps / 30);
+      document.getElementById('oneRepMax').textContent = oneRM.toFixed(1) + ' kg';
+    } else {
+      document.getElementById('oneRepMax').textContent = 'N/A';
+    }
+  }
+
+  // Update duration display
+  function updateDuration() {
+    const duration = parseInt(document.getElementById('duration').value) || 0;
+    const hours = Math.floor(duration / 60);
+    const minutes = duration % 60;
+    
+    let display = '';
+    if (hours > 0) {
+      display = `${hours}h ${minutes}m`;
+    } else {
+      display = `${minutes}m`;
+    }
+    
+    document.getElementById('durationDisplay').textContent = display;
+  }
+
+  // Add event listeners
+  document.getElementById('sets').addEventListener('input', calculateVolume);
+  document.getElementById('reps').addEventListener('input', calculateVolume);
+  document.getElementById('weight').addEventListener('input', calculateVolume);
+  document.getElementById('duration').addEventListener('input', updateDuration);
+
+  // Form validation
+  document.getElementById('workoutForm').addEventListener('submit', function(e) {
+    const workout = document.getElementById('workout').value.trim();
+    const duration = parseInt(document.getElementById('duration').value);
+    const sets = parseInt(document.getElementById('sets').value);
+    const reps = parseInt(document.getElementById('reps').value);
+    
+    if (workout.length < 2) {
+      e.preventDefault();
+      alert('Please enter a workout name (at least 2 characters).');
+      return;
+    }
+    
+    if (duration < 1 || duration > 480) {
+      e.preventDefault();
+      alert('Please enter a valid duration between 1 and 480 minutes.');
+      return;
+    }
+    
+    if (sets < 1 || sets > 50) {
+      e.preventDefault();
+      alert('Please enter a valid number of sets between 1 and 50.');
+      return;
+    }
+    
+    if (reps < 1 || reps > 1000) {
+      e.preventDefault();
+      alert('Please enter a valid number of reps between 1 and 1000.');
+      return;
+    }
+  });
+
+  // Initialize calculations on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    calculateVolume();
+    updateDuration();
+    updateDifficultyLabel(3);
+  });
+</script>
+
+<style>
+  .slider::-webkit-slider-thumb {
+    appearance: none;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: #06D6A0;
+    cursor: pointer;
+  }
+
+  .slider::-moz-range-thumb {
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: #06D6A0;
+    cursor: pointer;
+    border: none;
+  }
+</style>
+{% endblock %}

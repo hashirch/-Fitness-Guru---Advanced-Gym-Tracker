@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Fitness Guru{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Ubuntu', sans-serif;
+    }
+    .gradient-bg {
+      background: linear-gradient(135deg, #2B1D41 0%, #1C1C3C 100%);
+    }
+    .btn-primary {
+      background-color: #EF476F;
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      background-color: #FF5E7E;
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background-color: #06D6A0;
+      transition: all 0.3s ease;
+    }
+    .btn-secondary:hover {
+      background-color: #00E8AA;
+      transform: translateY(-2px);
+    }
+    .card {
+      transition: all 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    .flash-message {
+      animation: slideIn 0.5s ease-out;
+    }
+    @keyframes slideIn {
+      from {
+        transform: translateY(-100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  </style>
+  {% block extra_css %}{% endblock %}
+</head>
+
+<body class="bg-[#1C1C3C] text-white min-h-screen flex flex-col">
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="fixed top-4 right-4 z-50 space-y-2">
+        {% for category, message in messages %}
+          <div class="flash-message px-6 py-4 rounded-lg shadow-lg max-w-md {% if category == 'error' %}bg-red-600{% elif category == 'success' %}bg-green-600{% elif category == 'warning' %}bg-yellow-600{% else %}bg-blue-600{% endif %}">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                {% if category == 'error' %}
+                  <i class="fas fa-exclamation-circle mr-2"></i>
+                {% elif category == 'success' %}
+                  <i class="fas fa-check-circle mr-2"></i>
+                {% elif category == 'warning' %}
+                  <i class="fas fa-exclamation-triangle mr-2"></i>
+                {% else %}
+                  <i class="fas fa-info-circle mr-2"></i>
+                {% endif %}
+                <span>{{ message }}</span>
+              </div>
+              <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white hover:text-gray-200">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Header -->
+  <header class="flex items-center justify-between p-6 gradient-bg shadow-lg">
+    <div class="flex items-center space-x-4">
+      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Fitness Guru Logo" class="w-14 h-14">
+      <h1 class="text-3xl font-bold">Fitness Guru</h1>
+    </div>
+    
+    <!-- Auth Status -->
+    <div class="flex items-center space-x-4">
+      {% if session.get('user_id') %}
+        <span class="text-gray-300">Hello, {{ session.get('user_id') }}</span>
+        <a href="{{ url_for('logout') }}" class="px-4 py-2 rounded-full bg-[#2F2F4F] hover:bg-[#3F3F5F] text-sm font-medium transition duration-200">
+          <i class="fas fa-sign-out-alt mr-1"></i>Logout
+        </a>
+      {% else %}
+        <a href="{{ url_for('login') }}" class="px-4 py-2 rounded-full bg-[#2F2F4F] hover:bg-[#3F3F5F] text-sm font-medium transition duration-200">
+          <i class="fas fa-sign-in-alt mr-1"></i>Login
+        </a>
+        <a href="{{ url_for('register') }}" class="px-4 py-2 rounded-full btn-primary text-sm font-medium">
+          <i class="fas fa-user-plus mr-1"></i>Register
+        </a>
+      {% endif %}
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  {% if session.get('user_id') %}
+    <nav class="flex justify-around bg-[#2F2F4F] text-md text-gray-300 py-4 border-t border-b border-[#444]">
+      <a href="{{ url_for('index') }}" class="hover:text-white font-medium transition-colors flex items-center">
+        <i class="fas fa-home mr-1"></i>Home
+      </a>
+      <a href="{{ url_for('log_workout') }}" class="hover:text-white font-medium transition-colors flex items-center">
+        <i class="fas fa-dumbbell mr-1"></i>Log Workout
+      </a>
+      <a href="{{ url_for('progress') }}" class="hover:text-white font-medium transition-colors flex items-center">
+        <i class="fas fa-chart-line mr-1"></i>Progress
+      </a>
+      <a href="{{ url_for('workout_history') }}" class="hover:text-white font-medium transition-colors flex items-center">
+        <i class="fas fa-history mr-1"></i>History
+      </a>
+      <a href="{{ url_for('profile') }}" class="hover:text-white font-medium transition-colors flex items-center">
+        <i class="fas fa-user mr-1"></i>Profile
+      </a>
+      <a href="{{ url_for('about') }}" class="hover:text-white font-medium transition-colors flex items-center">
+        <i class="fas fa-info-circle mr-1"></i>About
+      </a>
+    </nav>
+  {% endif %}
+
+  <!-- Main Content Area -->
+  <main class="flex-grow">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-16 p-6 text-center text-gray-400 text-sm bg-[#2B1D41] border-t border-[#444]">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex flex-col md:flex-row justify-between items-center mb-4">
+        <div class="flex items-center space-x-2 mb-4 md:mb-0">
+          <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Fitness Guru Logo" class="w-8 h-8">
+          <span class="font-bold text-white">Fitness Guru</span>
+        </div>
+        <div class="flex space-x-6">
+          <a href="{{ url_for('about') }}" class="hover:text-white transition-colors">About</a>
+          <a href="{{ url_for('contact') }}" class="hover:text-white transition-colors">Contact</a>
+          <a href="#" class="hover:text-white transition-colors">Privacy</a>
+          <a href="#" class="hover:text-white transition-colors">Terms</a>
+        </div>
+      </div>
+      <div class="pt-4 border-t border-[#444]">
+        &copy; 2025 Fitness Guru. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // Auto-hide flash messages after 5 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+      const flashMessages = document.querySelectorAll('.flash-message');
+      flashMessages.forEach(function(message) {
+        setTimeout(function() {
+          message.style.animation = 'slideOut 0.5s ease-in forwards';
+          setTimeout(function() {
+            message.remove();
+          }, 500);
+        }, 5000);
+      });
+    });
+
+    // Add slideOut animation
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideOut {
+        from {
+          transform: translateY(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateY(-100%);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html> 
