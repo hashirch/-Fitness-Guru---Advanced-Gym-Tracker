@@ -155,5 +155,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 [![Fork on GitHub](https://img.shields.io/github/forks/yourusername/fitness-guru?style=social)](https://github.com/yourusername/fitness-guru/network/members)
 
 *Made with ❤️ by the Fitness Guru Team*
+*Shaka420 & Hashir Chaudhary*
 
 </div>
